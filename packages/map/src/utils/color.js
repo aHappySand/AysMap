@@ -150,3 +150,61 @@ export const arrToHex = (arr) => `#${arr.map(val => {
   }
   return newVal;
 }).join('')}`;
+/**
+ * @description 计算两个颜色的渐变色 指定比例的中间色
+ * @param {String} startColor 渐变色的起始色 hexcolor
+ * @param {String} endColor 渐变色的结束色 hexcolor
+ */
+export function GradientColor(startColor, endColor) {
+  // 此处调用了 自定义的 16 进制转换 10 进制的函数
+  const startColorDecimalisArray = transfeRgbHex(startColor);
+  const endColorDecimalisArray = transfeRgbHex(endColor);
+  this.startColorDecimalisArray = startColorDecimalisArray;
+  // 两个颜色的差值数组
+  this.rgbDifferenceArray = [];
+  // endColor 的 rgb 值 分别减掉 startColor 的 rgb 值并分别记录
+
+  for (let index = 0; index < startColorDecimalisArray.length; index++) {
+    this.rgbDifferenceArray.push(endColorDecimalisArray[index] - startColorDecimalisArray[index]);
+  }
+}
+
+
+GradientColor.prototype = {
+  // {Float} proportion 从起始色到结束色的比例 比如从 #000000 到 #FFFFFF 渐变到 50% 时的颜色是 #888888 50%取值为 0.5
+  getColor(proportion) {
+    // startColor 的 rgb 值 分别加上对应比例的 rgb 差值 得到 结果色值的 rgb 数组
+    const resultRgbHexArray = this.rgbDifferenceArray.map((item, index) => {
+      let resultVal = Math.round(this.startColorDecimalisArray[index] + item * proportion);
+      // 将 10 进制的 值转换为 16 进制
+      resultVal = resultVal.toString(16);
+      if (resultVal.length === 1) {
+        resultVal = `0${resultVal}`;
+      }
+      return resultVal;
+    });
+    // 将 16 进制的 rgb 数组转换为 16进制表示法 hexColor 字符串
+    return `#${resultRgbHexArray.join('')}`;
+  }
+};
+
+/**
+ * @description 从 hex值中获取 rgb 颜色信息 并转换为 10 进制
+ * @param {String} hexcolor hex颜色值
+ * @return {Array} 一个包含 用十进制表示 rgba 值的数组[red, green, blue]
+ */
+
+function transfeRgbHex(hexcolor) {
+  // 10进制的 rgb 值数组
+  const rgbDecimalismArray = [];
+  // 两位一组转换为 10 进制
+  for (let index = 1; index < 7; index += 2) {
+    const hexVal = hexcolor.slice(index, index + 2);
+    const decimalismVal = parseInt(hexVal, 16);
+
+    if (index < 7) {
+      rgbDecimalismArray.push(decimalismVal);
+    }
+  }
+  return rgbDecimalismArray;
+}
