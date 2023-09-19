@@ -1,6 +1,6 @@
 {
-  "name": "map0",
-  "version": "1.0.1",
+  "name": "AysMap",
+  "version": "1.0.0",
   "description": "refactoring echarts using three.js",
   "main": "src/index.js",
   "scripts": {
@@ -47,7 +47,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:aHappySand/map0.git"
+    "url": "git@github.com:aHappySand/AysMap.git"
   },
   "keywords": [
     "vue2",
