@@ -13,7 +13,7 @@
             ref="map"
             :base-data="split.baseData"
             :map-property="split.mapProperty"
-            :map-option="split.mapOption"
+            :map-option="_mapOption"
             :sourceAggregateData="split.aggregateData"
             :sourceDefectData="split.defectData"
             :zoneBorderDies="split.zoneBorderDies"
@@ -48,7 +48,12 @@ export default {
     BaseMap,
   },
   props: {
-    mapOption: Object,
+    mapOption: {
+      type: Object,
+      default: () => ({
+        type: 0,
+      })
+    },
     sourceData: Object,
     row: {
       type: Number,
@@ -75,6 +80,7 @@ export default {
       num: 1,
       changeKey: Math.random(),
       count: -1,
+      _mapOption: null,
     };
   },
 
@@ -87,15 +93,10 @@ export default {
   },
   methods: {
     onShowDetail(val) {
-      const mapOpt = this.mapOption;
-      if (mapOpt) {
-        mapOpt.detailVisiable = val;
-      }
+      // this.mapOption && (this.mapOption.detailVisiable = val);
     },
     handleToggleShowZone(val) {
-      if (this.mapOption) {
-        this.mapOption.zoneVisible = val;
-      }
+      // this.mapOption && (this.mapOption.zoneVisible = val);
     },
     /**
        * 初始化处理数据
@@ -114,6 +115,7 @@ export default {
       this.num = 1;
 
       const splitList = this.objMap.getGridData();
+      this._mapOption = this.objMap.options;
       splitList.forEach(item => {
         item.style = style;
         item.onShowDetail = this.onShowDetail;

@@ -1,14 +1,14 @@
 {
-  "name": "AysMap",
+  "name": "ays-map",
   "version": "1.0.0",
-  "description": "refactoring echarts using three.js",
+  "description": "draw map by pixel",
   "main": "src/index.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "analyzer": "vue-cli-service build --mode analyzer",
-    "lib": "vue-cli-service build --target lib --name zcharts --dest lib packages/index.js"
+    "lib": "vue-cli-service build --target lib --name ays-map --dest lib packages/index.js"
   },
   "dependencies": {
     "core-js": "3.29.1",

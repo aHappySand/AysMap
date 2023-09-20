@@ -1,6 +1,6 @@
 <template>
   <div class="fill">
-    <ZGridMap :source-data="sourceData" :map-option="mapOption"></ZGridMap>
+    <ZGridMap :source-data="sourceData" :map-option="mapOption" :row="1" :col="2"></ZGridMap>
   </div>
 </template>
 

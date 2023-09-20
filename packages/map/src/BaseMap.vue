@@ -287,9 +287,7 @@ export default {
 
       if (rightWidth > 0) {
         if (this.$el && this.$el.getBoundingClientRect().width < rightWidth + 50) {
-          // return {
-          // 	display: 'none',
-          // }
+
         }
       }
       return {
@@ -350,11 +348,6 @@ export default {
         }
       }
       return field;
-    },
-    zoneObj() {
-      return Object.assign({}, this.sourceAggregateData || {}, {
-        zoneAnalysisData: this.zoneAnalysisData || [],
-      });
     },
     hasComponentData() {
       return !!(this.componentData && this.componentData.option);
@@ -731,7 +724,7 @@ export default {
   }
   .detail-box {
     max-width: 180px;
-    height: calc(100% - 5px);
+    height: calc(100% - 6px);
     overflow: auto;
   }
 

@@ -678,25 +678,22 @@ export const emptyZoneId = '_$_';
  * @returns {*}
  */
 export function flowMap(jsonData, options = {}) {
-  return getMap(jsonData, options);
-}
-
-// 解析map数据
-// eslint-disable-next-line no-shadow
-export function dealMap(jsonData, options = {}) {
-  options.mapType = 0;
-  return getMap(jsonData, options).mapDatas;
+  if (options.mapType === 1) {
+    return dealDefectMap(jsonData, options);
+  }
+  return dealWaferMap(jsonData, options);
 }
 
 // eslint-disable-next-line no-shadow
 export function dealWaferMap(jsonData, options = {}) {
-  options = Object.assign({}, analysisMapOption, options || {},);
+  options = Object.assign({}, waferMapOption, options || {},);
   options.mapType = 0;
   return getMap(jsonData, options);
 }
 
 // eslint-disable-next-line no-shadow
 export function dealDefectMap(jsonData, optons = {}) {
+  optons = Object.assign({}, defectMapOption, optons || {},);
   optons.mapType = 1;
   return getMap(jsonData, optons);
 }
@@ -1871,10 +1868,8 @@ export function getMap(jsonMap, options) {
     getWaferGridData() {
       const splitList = [];
       const products = this.getProducts();
-      const options = {
-        ...this.options,
-        tooltips: this.formatShowFields()
-      };
+      this.options.tooltips = this.formatShowFields();
+      const options = this.options;
 
       let index = 0;
       products.forEach(p => {
@@ -1913,10 +1908,7 @@ export function getMap(jsonMap, options) {
     getDefectGridData() {
       const splitList = [];
       const products = this.getProducts();
-      const options = {
-        ...this.options,
-        tooltips: this.formatShowFields()
-      };
+      this.options.tooltips = this.formatShowFields();
       let index = 0;
       products.forEach(p => {
         const pid = p.property.productId;
@@ -1966,85 +1958,6 @@ export function getMap(jsonMap, options) {
         return this.getWaferGridData();
       }
       return this.getDefectGridData();
-    },
-    randomDefectData(num = 200000) {
-      const data = [];
-
-      function getRandomDie(data) {
-        let dieid;
-        do {
-          const diex = Math.floor(Math.random() * 66);
-          const diey = Math.floor(Math.random() * 66);
-          dieid = `${diex}_${diey}`;
-        } while (!data[dieid]);
-        return data[dieid];
-      }
-
-      this.getWaferGridData().forEach(({ splitField, aggregateData, baseZoneData, mapProperty }) => {
-        const splits = splitField.split('_');
-        const split2 = splits[1].split('#');
-
-        const dieData = aggregateData.data;
-        const defData = [];
-        for (let i = 0; i < num; i++) {
-          let die = getRandomDie(dieData);
-          const dieid = `${die.die_x}_${die.die_y}`;
-          for (const zid in baseZoneData) {
-            if (baseZoneData[zid][dieid]) {
-              die = baseZoneData[zid][dieid];
-              break;
-            }
-          }
-          const h = Math.random() * mapProperty.dieHeight;
-          const w = Math.random() * mapProperty.dieWidth;
-          defData[i] = {
-            diey: die.diex,
-            diex: die.diey,
-            colorGroupField: '101',
-            waferId: splits[1],
-            shapeGroupField: '101',
-            sizeGroupField: 'BIN_2L_FULL_SIZE_NORMAL_BRIGHT_FAIL',
-            coory: die.topy + h,
-            coorx: die.leftx + w,
-            originLeftX: die.originLeftX + w,
-            originTopY: die.originTopY + h,
-            isImageDefect: Math.random() < 0.4,
-            colorShow: [140, 202, 255, 255],
-            size: 3,
-            shapeShow: 'circle',
-          };
-        }
-
-        const defect = {
-          shapeGroup: [
-            {
-              value: null,
-              min: '1',
-              shapeShow: 'Circle',
-              max: '21.4'
-            },
-          ],
-          layerId: '',
-          data: defData,
-          productId: mapProperty.productId,
-          colorGroup: [
-            {
-              value: null,
-              min: '1',
-              color: '#FF00C800',
-              max: '21.4'
-            }
-          ],
-          splitField,
-          lotId: split2[0],
-          inspectionTimes: [],
-          waferId: splits[1],
-          waferKeys: []
-        };
-        data.push(defect);
-      });
-      defectMapData = data;
-      return data;
     },
   };
   return map.init(jsonMap, options);
